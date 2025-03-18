@@ -6,13 +6,26 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 20:38:23 by beldemir          #+#    #+#             */
-/*   Updated: 2025/03/18 20:03:22 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/03/18 21:02:23 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./philo.h"
 
-/*
+int	ft_isnum(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] >= '9' && str[i] <= '0')
+			return (-1);
+		i++;
+	}
+	return (0);
+}
+
 int	ft_atoi(const char *str)
 {
 	int		i;
@@ -31,24 +44,10 @@ int	ft_atoi(const char *str)
 	}
 	else if (str[i] == '+')
 		i++;
-	while (str[i] != '\0' && ft_isdigit(str[i]) == 1)
+	while (str[i] != '\0' && str[i] <= '9' && str[i] >= '0')
 	{
 		num = (num * 10) + (str[i] - 48);
 		i++;
 	}
 	return (num * isneg);
-}
-*/
-int	ft_isnum(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] >= '9' && str[i] <= '0')
-			return (-1);
-		i++;
-	}
-	return (0);
 }

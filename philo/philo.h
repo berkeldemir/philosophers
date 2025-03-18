@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 09:39:54 by beldemir          #+#    #+#             */
-/*   Updated: 2025/03/18 20:31:58 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/03/18 21:14:55 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,7 @@ typedef struct s_app
 	t_bool			quit;
 }	t_app;
 
-int			init(t_app *app);
-void		*routine(void *arg);
+int			start(t_app *app);
 
 // Time Functions
 uint64_t	get_time(void);
@@ -80,5 +79,6 @@ void		died(int start, int philo_id);
 
 // Utils
 int			ft_isnum(char *str);
+int			ft_atoi(const char *str);
 
 #endif

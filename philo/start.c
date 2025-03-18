@@ -1,27 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   start.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:46:40 by beldemir          #+#    #+#             */
-/*   Updated: 2025/03/18 20:33:46 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/03/18 21:16:27 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./philo.h"
 
-void	*routine(void *arg)
+static void	*routine(void *arg)
 {
 	t_app		*app;
 
 	app = (t_app *)arg;
-	printf("here!\n");
 	return (NULL);
 }
 
-int	init(t_app *app)
+int	start(t_app *app)
 {
 	int	i;
 
