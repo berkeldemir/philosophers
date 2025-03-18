@@ -6,36 +6,41 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:46:40 by beldemir          #+#    #+#             */
-/*   Updated: 2025/03/17 20:46:26 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/03/18 20:33:46 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./philo.h"
 
-int    init(t_app *app)
+void	*routine(void *arg)
 {
-	int			i;
+	t_app		*app;
 
-	app->count = 5;
-	app->philo = (pthread_t *)malloc(sizeof(pthread_t) * app->philo_count);
-	if (!app->philo)
-		return (-1);
-	app->philo_id = (int *)malloc(sizeof(int) * app->count);
-	if (!app->philo_id)
-		return (-1);
+	app = (t_app *)arg;
+	printf("here!\n");
+	return (NULL);
+}
+
+int	init(t_app *app)
+{
+	int	i;
+
+	app->philos = (t_philo *)malloc(sizeof(t_philo) * app->philo_count);
+	if (!app->philos)
+		return (1);
 	i = -1;
-	while (++i < app->count)
-		app->philo_id[i] = i + 1;
-	i = -1;
-	while (++i < app->count)
+	while (++i < app->philo_count)
 	{
-		if (pthread_create(&app->philo[i], NULL, \
-		&routine, &app->philo_id[i]) != 0)
-			return (-1);
-		//thinking(app->philo_id[i]);
+		app->philos[i].philo_id = i + 1;
+		app->philos[i].meals_had = 0;
+		app->philos[i].full = FALSE;
+		app->philos[i].last_eaten = 0;
+		app->philos[i].l_fork = NULL;
+		app->philos[i].r_fork = NULL;
+		pthread_create(&app->philos[i].thread, NULL, routine, (void *)&app);
 	}
 	i = -1;
-	while (++i < app->count)
-		pthread_join(app->philo[i], NULL);
+	while (++i < app->philo_count)
+		pthread_join(app->philos[i].thread, NULL);
 	return (0);
 }

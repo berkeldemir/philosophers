@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 09:39:54 by beldemir          #+#    #+#             */
-/*   Updated: 2025/03/17 20:46:13 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/03/18 20:31:58 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,15 @@ typedef enum e_bool
 	FALSE = 0
 }	t_bool;
 
-typedef	struct s_fork
+typedef struct s_fork
 {
 	pthread_mutex_t	fork;
-	int				fork_id;
+	unsigned int	fork_id;
 }	t_fork;
 
 typedef struct s_philo
 {
-	pthread_t	thread_id;
+	pthread_t	thread;
 	int			philo_id;
 	int			meals_had;
 	t_bool		full;
@@ -53,27 +53,32 @@ typedef struct s_philo
 
 typedef struct s_app
 {
-	t_fork		*forks;
-	t_philo		*philos;
-	int			philo_count;
-	uint64_t	time_to_die;
-	uint64_t	time_to_eat;
-	uint64_t	time_to_slp;
-	uint64_t	init_time;
-	t_bool		quit;
+	t_fork			*forks;
+	t_philo			*philos;
+	int				philo_count;
+	uint64_t		time_to_die;
+	uint64_t		time_to_eat;
+	uint64_t		time_to_slp;
+	int				max_meal;
+	uint64_t		start;
+	t_bool			quit;
 }	t_app;
 
-int		init(t_app *app);
-void	*routine(void *arg);
+int			init(t_app *app);
+void		*routine(void *arg);
+
+// Time Functions
+uint64_t	get_time(void);
+void		elapsed_time(uint64_t init_time);
 
 // Actions
-void	taken_a_fork(int philo_id);
-void	eating(int philo_id);
-void	sleeping(int philo_id);
-void	thinking(int philo_id);
-void	died(int philo_id);
+void		taken_a_fork(int start, int philo_id);
+void		eating(int start, int philo_id);
+void		sleeping(int start, int philo_id);
+void		thinking(int start, int philo_id);
+void		died(int start, int philo_id);
 
 // Utils
-int		ft_isnum(char *str);
+int			ft_isnum(char *str);
 
 #endif
