@@ -6,24 +6,31 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 12:46:40 by beldemir          #+#    #+#             */
-/*   Updated: 2025/03/20 14:25:40 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/03/20 15:34:24 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./philo.h"
 
-static int	*inner_routine(t_philo *philo, t_app *app)
+static void	inner_routine(t_philo *philo, t_app *app)
 {
-	if (ask_waiter(philo, app))
-	{
-		pthread_mutex_lock(philo->l_fork);
-		pthread_mutex_lock(philo->r_fork);
-		philo->meals_had++;
-		//philo->last_eaten(app->start - );
-		eating(app->start, philo->philo_id);
-		pthread_mutex_unlock(philo->l_fork);
-		pthread_mutex_unlock(philo->r_fork);
-	}
+	thinking(app->start, philo->philo_id);
+	while (ask_waiter(philo, app) == 0)
+		if (philo->last_eaten - app->start >= app->time_to_die)
+			return (died(app->start, philo->philo_id));
+	usleep(app->time_to_die * 100);
+	pthread_mutex_lock(philo->l_fork);
+	pthread_mutex_lock(philo->r_fork);
+	taken_a_fork(app->start, philo->philo_id);
+	taken_a_fork(app->start, philo->philo_id);
+	philo->meals_had++;
+	philo->last_eaten = get_time() - app->start;
+	eating(app->start, philo->philo_id);
+	usleep(app->time_to_eat * 100);
+	pthread_mutex_unlock(philo->l_fork);
+	pthread_mutex_unlock(philo->r_fork);
+	sleeping(app->start, philo->philo_id);
+	usleep(app->time_to_slp * 100);
 }
 
 static void	*routine(void *arg)
@@ -31,12 +38,8 @@ static void	*routine(void *arg)
 	t_philo		*philo;
 
 	philo = (t_philo *)arg;
-	while (philo->app->quit != 1)
-	{
-		/*
-		if (inner_routine(philo, philo->app))
-		*/
-	}
+	if (1)//should_close(philo->app) != 1)
+		inner_routine(philo, philo->app);
 	if (!philo->app)
 		return (NULL);
 	return (NULL);
@@ -54,17 +57,13 @@ int	start_philos(t_app *app)
 	i = -1;
 	while (++i < app->philo_count)
 	{
-		app->philos[i].philo_id = i + 1;
-		app->philos[i].stat = THINKING;
-		app->philos[i].full = FALSE;
-		app->philos[i].meals_had = 0;
-		app->philos[i].last_eaten = 0;
-		app->philos[i].app = app;
+		init_philo(app, i);
+		//printf("philo %i initiliazed, their id: %i\n", i, app->philos[i].philo_id);
 		if (i != 0)
 			app->philos[i].l_fork = &app->forks[i - 1];
 		if (i != 0)
 			app->philos[i].r_fork = &app->forks[i];
-		pthread_create(&app->philos[i].thread, NULL, routine, (void *)&app);
+		pthread_create(&app->philos[i].thread, NULL, routine, (void *)&app->philos[i]);
 	}
 	i = -1;
 	while (++i < app->philo_count)
@@ -76,15 +75,12 @@ int	start(t_app *app)
 {
 	int	i;
 
-	app->forks = (t_fork *)malloc(sizeof(t_fork) * app->philo_count);
+	app->forks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * app->philo_count);
 	if (!app->forks)
 		return (1);
 	i = -1;
 	while (++i < app->philo_count)
-	{
-		pthread_mutex_init(&app->forks[i].fork, NULL);
-		app->forks[i].fork_id = i + 1;
-	}
+		pthread_mutex_init(&app->forks[i], NULL);
 	if (start_philos(app) != 0)
 		return (1);
 	return (0);

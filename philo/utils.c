@@ -6,11 +6,21 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 20:38:23 by beldemir          #+#    #+#             */
-/*   Updated: 2025/03/20 12:59:32 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:57:17 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./philo.h"
+
+void	init_philo(t_app *app, int i)
+{
+		app->philos[i].philo_id = i + 1;
+		app->philos[i].stat = THINKING;
+		app->philos[i].full = FALSE;
+		app->philos[i].meals_had = 0;
+		app->philos[i].last_eaten = 0;
+		app->philos[i].app = app;
+}
 
 int	ft_isnum(char *str)
 {
