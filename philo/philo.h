@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 09:39:54 by beldemir          #+#    #+#             */
-/*   Updated: 2025/03/18 21:14:55 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:22:14 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,21 @@
 # define YELLOW "\033[38;2;255;225;120m" // Soft Yellow
 # define PURPLE "\033[38;2;180;130;255m"  // Soft Purple
 
+struct	s_app;
+
 typedef enum e_bool
 {
 	TRUE = 1,
 	FALSE = 0
 }	t_bool;
+
+typedef enum e_stat
+{
+	EATING = 0,
+	SLEEPING = 1,
+	THINKING = 2,
+	DEAD = 3
+}	t_stat;
 
 typedef struct s_fork
 {
@@ -42,13 +52,15 @@ typedef struct s_fork
 
 typedef struct s_philo
 {
-	pthread_t	thread;
-	int			philo_id;
-	int			meals_had;
-	t_bool		full;
-	uint64_t	last_eaten;
-	t_fork		*l_fork;
-	t_fork		*r_fork;
+	pthread_t		thread;
+	int				philo_id;
+	t_stat			stat;
+	t_bool			full;
+	int				meals_had;
+	uint64_t		last_eaten;
+	t_fork			*l_fork;
+	t_fork			*r_fork;
+	struct s_app	*app;
 }	t_philo;
 
 typedef struct s_app
@@ -79,6 +91,6 @@ void		died(int start, int philo_id);
 
 // Utils
 int			ft_isnum(char *str);
-int			ft_atoi(const char *str);
+int			ft_atoi(char *str);
 
 #endif

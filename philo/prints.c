@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:48:27 by beldemir          #+#    #+#             */
-/*   Updated: 2025/03/18 20:51:48 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:15:56 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	taken_a_fork(int start, int philo_id)
 	printf("%s%i%s%s\n", YELLOW, philo_id, " has taken a fork", DEFAULT);
 }
 
-void	eating(int start, int philo_id)
+void	eating(int start, int philo_id, pthread_mutex_t l, pthread_mutex_t *r)
 {
 	elapsed_time(start);
 	printf("%s%i%s%s\n", ORANGE, philo_id, " is eating", DEFAULT);

@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 20:38:23 by beldemir          #+#    #+#             */
-/*   Updated: 2025/03/18 21:02:23 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/03/20 12:59:32 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	ft_isnum(char *str)
 	return (0);
 }
 
-int	ft_atoi(const char *str)
+int	ft_atoi(char *str)
 {
 	int		i;
 	long	num;
