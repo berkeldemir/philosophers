@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: beldemir <beldemir@42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 09:39:54 by beldemir          #+#    #+#             */
-/*   Updated: 2025/03/20 15:19:05 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/03/20 19:25:40 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ typedef struct s_app
 }	t_app;
 
 int			start(t_app *app);
-int	ask_waiter(t_philo *philo, t_app *app);
+int			ask_waiter(t_philo *philo);
 
 // Time Functions
 uint64_t	get_time(void);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: beldemir <beldemir@42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 09:38:14 by beldemir          #+#    #+#             */
-/*   Updated: 2025/03/18 20:49:25 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/03/20 19:02:53 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,19 @@ static int	check_args(int ac, char **av, t_app *app)
 int	main(int ac, char **av)
 {
 	t_app		app;
+	int			i;
 
 	if (check_args(ac, av, &app) != 0)
 		return (1);
 	app.start = get_time();
 	if (start(&app) != 0)
 		return (1);
-	free(app.philos);
+	if (app.philos)
+		free(app.philos);
+	if (app.forks)
+		free(app.forks);
+	i = -1;
+	while (++i < app.philo_count)
+		pthread_mutex_destroy(&app.forks[i]);
 	return (0);
 }

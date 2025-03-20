@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
+/*   By: beldemir <beldemir@42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 20:38:23 by beldemir          #+#    #+#             */
-/*   Updated: 2025/03/20 14:57:17 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/03/20 19:02:03 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	ft_isnum(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] >= '9' && str[i] <= '0')
+		if (str[i] > '9' && str[i] < '0')
 			return (-1);
 		i++;
 	}
