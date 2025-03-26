@@ -3,33 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beldemir <beldemir@42istanbul.com.tr>      +#+  +:+       +#+        */
+/*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/11 09:39:54 by beldemir          #+#    #+#             */
-/*   Updated: 2025/03/20 19:25:40 by beldemir         ###   ########.fr       */
+/*   Created: 2025/03/23 11:58:05 by beldemir          #+#    #+#             */
+/*   Updated: 2025/03/26 10:57:28 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
-# include <pthread.h>
-# include <stdlib.h>
+# include <limits.h>
 # include <stdio.h>
-# include <sys/time.h>
 # include <unistd.h>
 # include <stdint.h>
-# include <string.h>
-# include <errno.h>
+# include <stdlib.h>
+# include <pthread.h>
+# include <sys/time.h>
 
-# define DEFAULT "\033[0m"
-# define RED "\033[38;2;220;80;80m"      // Soft Red
-# define GREEN "\033[38;2;80;200;120m"   // Soft Green
-# define BLUE "\033[38;2;100;150;255m"   // Soft Blue
-# define ORANGE "\033[38;2;255;170;80m"  // Soft Orange
-# define YELLOW "\033[38;2;255;225;120m" // Soft Yellow
-# define PURPLE "\033[38;2;180;130;255m"  // Soft Purple
-
-struct	s_app;
+struct s_info;
 
 typedef enum e_bool
 {
@@ -37,57 +28,39 @@ typedef enum e_bool
 	FALSE = 0
 }	t_bool;
 
-typedef enum e_stat
+typedef enum e_status
 {
-	EATING = 0,
-	SLEEPING = 1,
-	THINKING = 2,
-	DEAD = 3
-}	t_stat;
+	EATING,
+	SLEEPING,
+	THINKING
+}	t_status;
 
-typedef struct s_philo
+typedef struct s_phi
 {
-	pthread_t		thread;
-	int				philo_id;
-	t_stat			stat;
-	t_bool			full;
-	int				meals_had;
-	uint64_t		last_eaten;
+	pthread_t		thr;
+	int				id;
+	t_status		status;
+	struct s_info	*info;
 	pthread_mutex_t	*l_fork;
 	pthread_mutex_t	*r_fork;
-	struct s_app	*app;
-}	t_philo;
+}	t_phi;
 
-typedef struct s_app
+typedef struct s_info
 {
+	struct s_phi	*philos;
 	pthread_mutex_t	*forks;
-	t_philo			*philos;
 	int				philo_count;
+	struct timeval	tv;
+	uint64_t		time_init;
 	uint64_t		time_to_die;
 	uint64_t		time_to_eat;
-	uint64_t		time_to_slp;
-	int				max_meal;
-	uint64_t		start;
+	uint64_t		time_to_sleep;
+	int				must_eat;
 	t_bool			quit;
-}	t_app;
+}	t_info;
 
-int			start(t_app *app);
-int			ask_waiter(t_philo *philo);
-
-// Time Functions
-uint64_t	get_time(void);
-void		elapsed_time(uint64_t init_time);
-
-// Actions
-void		taken_a_fork(uint64_t start, int philo_id);
-void		eating(uint64_t start, int philo_id);
-void		sleeping(uint64_t start, int philo_id);
-void		thinking(uint64_t start, int philo_id);
-void		died(uint64_t start, int philo_id);
-
-// Utils
-void		init_philo(t_app *app, int i);
-int			ft_isnum(char *str);
-int			ft_atoi(char *str);
+int		ft_atoi(const char *str, int *tab_num);
+int		start(int ac, char **av);
+void	*routine(void *arg);
 
 #endif

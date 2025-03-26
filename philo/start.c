@@ -3,100 +3,84 @@
 /*                                                        :::      ::::::::   */
 /*   start.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beldemir <beldemir@42istanbul.com.tr>      +#+  +:+       +#+        */
+/*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/11 12:46:40 by beldemir          #+#    #+#             */
-/*   Updated: 2025/03/20 19:25:16 by beldemir         ###   ########.fr       */
+/*   Created: 2025/03/23 12:24:52 by beldemir          #+#    #+#             */
+/*   Updated: 2025/03/26 10:57:57 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./philo.h"
 
-static void	inner_routine(t_philo *philo, t_app *app)
+static void	assign_values(t_info *info, t_phi *phi, int ind)
 {
-	thinking(app->start, philo->philo_id);
-	while (ask_waiter(philo) == 0)
+	phi->id = ind + 1;
+	phi->info = info;
+	if (ind == 0)
 	{
-		if (get_time() - philo->last_eaten >= app->time_to_die)
-		{
-			died(app->start, philo->philo_id);
-			app->quit = TRUE;
-			return ;
-		}
-		if (app->quit == TRUE)
-			return ;
-	}
-	if (philo->philo_id == 1) // Check if it's the first philosopher
-	{
-		pthread_mutex_lock(philo->r_fork);
-		taken_a_fork(app->start, philo->philo_id);
-		pthread_mutex_lock(philo->l_fork);
-		taken_a_fork(app->start, philo->philo_id);
+		phi->l_fork = &phi->info->forks[ind - 1];
+		phi->r_fork = &phi->info->forks[ind];
 	}
 	else
 	{
-		pthread_mutex_lock(philo->l_fork);
-		taken_a_fork(app->start, philo->philo_id);
-		pthread_mutex_lock(philo->r_fork);
-		taken_a_fork(app->start, philo->philo_id);
+		phi->l_fork = &phi->info->forks[phi->info->philo_count - 1];
+		phi->r_fork = &phi->info->forks[0];
 	}
-	philo->meals_had++;
-	philo->last_eaten = get_time();
-	eating(app->start, philo->philo_id);
-	usleep(app->time_to_eat * 1000);
-	pthread_mutex_unlock(philo->l_fork);
-	pthread_mutex_unlock(philo->r_fork);
-	sleeping(app->start, philo->philo_id);
-	usleep(app->time_to_slp * 1000);
 }
 
-static void	*routine(void *arg)
+static int	init_philos(t_info *info)
 {
-	t_philo		*philo;
+	int	ind;
 
-	philo = (t_philo *)arg;
-	inner_routine(philo, philo->app);
-	if (!philo->app)
-		return (NULL);
-	return (NULL);
-}
-
-int	start_philos(t_app *app)
-{	
-	int	i;
-
-	app->philos = (t_philo *)malloc(sizeof(t_philo) * app->philo_count);
-	if (!app->philos)
+	info->philos = (t_phi *)malloc(sizeof(t_phi) * info->philo_count);
+	if (!info->philos)
 		return (1);
-	init_philo(app, 0);
-	app->philos[0].l_fork = &app->forks[app->philo_count - 1];
-	app->philos[0].r_fork = &app->forks[0];
-	i = 0;
-	while (++i < app->philo_count)
-	{
-		init_philo(app, i);
-		//printf("philo %i initiliazed, their id: %i\n", i, app->philos[i].philo_id);
-		app->philos[i].l_fork = &app->forks[i - 1];
-		app->philos[i].r_fork = &app->forks[i];
-		pthread_create(&app->philos[i].thread, NULL, routine, (void *)&app->philos[i]);
-	}
-	i = -1;
-	while (++i < app->philo_count)
-		pthread_join(app->philos[i].thread, NULL);
+	ind = -1;
+	while (++ind < info->philo_count)
+		assign_values(info, &info->philos[ind], ind);
+	ind = -1;
+	while (++ind < info->philo_count)
+		if (pthread_create(&info->philos[ind].thr, NULL, routine, &info->philos[ind]) != 0)
+			return (1);
+	ind = -1;
+	while (++ind < info->philo_count)
+		pthread_join(info->philos[ind].thr, NULL);
 	return (0);
 }
 
-int	start(t_app *app)
+static int	init_forks(t_info *info)
 {
-	int	i;
+	int	ind;
 
-	app->forks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * app->philo_count);
-	if (!app->forks)
+	info->forks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * info->philo_count);
+	if (!info->forks)
 		return (1);
-	i = -1;
-	while (++i < app->philo_count)
-		pthread_mutex_init(&app->forks[i], NULL);
-	if (start_philos(app) != 0)
+	ind = -1;
+	while (++ind < info->philo_count)
+		pthread_mutex_init(&info->forks[ind], NULL);
+	return (0);
+}
+
+int	start(int ac, char **av)
+{
+	t_info	info;
+
+	ft_atoi(av[1], (int *)&info.philo_count);
+	ft_atoi(av[2], (int *)&info.time_to_die);
+	ft_atoi(av[3], (int *)&info.time_to_eat);
+	ft_atoi(av[4], (int *)&info.time_to_sleep);
+	info.must_eat = -1;
+	if (ac == 6)
+		ft_atoi(av[5], &info.must_eat);
+	if (gettimeofday(&info.tv, NULL) == 0)
+		info.time_init = (long long)info.tv.tv_sec * 1000 +\
+	info.tv.tv_usec / 1000;
+	//printf("\n%d, %d, %d, %d\n", (int)info.time_to_die, (int)info.time_to_eat, (int)info.time_to_sleep, info.must_eat);
+	//printf("init time?: %lu\n", info.time_init);
+	if (init_forks(&info) != 0)
 		return (1);
+	if (init_philos(&info) != 0)
+		return (1);
+	//free_all(info);
 	return (0);
 }
