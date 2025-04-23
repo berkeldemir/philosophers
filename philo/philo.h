@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 11:58:05 by beldemir          #+#    #+#             */
-/*   Updated: 2025/03/26 10:57:28 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/04/23 04:48:45 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,26 +20,22 @@
 # include <pthread.h>
 # include <sys/time.h>
 
+# define MAX_PHILO 200
+
 struct s_info;
 
 typedef enum e_bool
 {
-	TRUE = 1,
-	FALSE = 0
+	FALSE,
+	TRUE
 }	t_bool;
-
-typedef enum e_status
-{
-	EATING,
-	SLEEPING,
-	THINKING
-}	t_status;
 
 typedef struct s_phi
 {
 	pthread_t		thr;
 	int				id;
-	t_status		status;
+	int				eat_count;
+	uint64_t		last_meal;
 	struct s_info	*info;
 	pthread_mutex_t	*l_fork;
 	pthread_mutex_t	*r_fork;
@@ -49,6 +45,7 @@ typedef struct s_info
 {
 	struct s_phi	*philos;
 	pthread_mutex_t	*forks;
+	pthread_t		*waiter;
 	int				philo_count;
 	struct timeval	tv;
 	uint64_t		time_init;
@@ -60,7 +57,10 @@ typedef struct s_info
 }	t_info;
 
 int		ft_atoi(const char *str, int *tab_num);
-int		start(int ac, char **av);
-void	*routine(void *arg);
+
+int			start(int ac, char **av);
+void		*waiter(void *ptr);
+void		*routine(void *arg);
+uint64_t	elapsed_time(t_info	*info);
 
 #endif

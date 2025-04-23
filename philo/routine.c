@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 14:02:41 by beldemir          #+#    #+#             */
-/*   Updated: 2025/03/26 11:04:42 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/04/23 04:41:37 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,6 @@ int check_alive(t_phi *phi)
 int check_must_eat_done(t_phi *phi)
 {
 	
-}
-
-void	*waiter(void *arg)
-{
-
 }
 
 void	*routine(void *arg)

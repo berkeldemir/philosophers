@@ -1,28 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tasks.c                                            :+:      :+:    :+:   */
+/*   waiter.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/26 10:56:51 by beldemir          #+#    #+#             */
-/*   Updated: 2025/04/23 04:11:00 by beldemir         ###   ########.fr       */
+/*   Created: 2025/03/23 12:24:52 by beldemir          #+#    #+#             */
+/*   Updated: 2025/04/23 04:46:22 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
- #include "./philo.h"
+#include "./philo.h"
 
-void	eat(t_phi *phi)
+static int	must_eat_done(t_info *info)
 {
-	phi->
+	int	i;
+
+	i = 0;
+	while (i < info->philo_count)
+	{
+		if (info->philos[i].eat_count >= info->must_eat)
+			return (1) ;
+		i++;
+	}
+	return (0);
 }
 
-void	think(t_phi *phi)
+void	*waiter(void *ptr)
 {
+	t_info	*info;
 
-}
-
-void	sleep(t_phi *phi)
-{
-
+	info = (t_info *)ptr;
+	while (1)
+	{
+		if (info->quit == TRUE || \
+		(info->must_eat != -1 && must_eat_done(info) != 0))
+			break ;
+	}
+	return (NULL);
 }
