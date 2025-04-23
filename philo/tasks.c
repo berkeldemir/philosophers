@@ -6,11 +6,11 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 10:56:51 by beldemir          #+#    #+#             */
-/*   Updated: 2025/04/23 04:11:00 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/04/23 23:28:55 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
- #include "./philo.h"
+#include "./philo.h"
 
 void	eat(t_phi *phi)
 {

@@ -6,22 +6,12 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 14:02:41 by beldemir          #+#    #+#             */
-/*   Updated: 2025/04/23 04:41:37 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/04/23 23:26:54 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./philo.h"
 #include "./philo.h"
-
-int check_alive(t_phi *phi)
-{
-
-}
-
-int check_must_eat_done(t_phi *phi)
-{
-	
-}
 
 void	*routine(void *arg)
 {

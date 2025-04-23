@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:24:52 by beldemir          #+#    #+#             */
-/*   Updated: 2025/04/23 04:46:22 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/04/23 23:29:49 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int	must_eat_done(t_info *info)
 	while (i < info->philo_count)
 	{
 		if (info->philos[i].eat_count >= info->must_eat)
-			return (1) ;
+			return (1);
 		i++;
 	}
 	return (0);

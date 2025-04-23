@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 11:58:05 by beldemir          #+#    #+#             */
-/*   Updated: 2025/04/23 04:48:45 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/04/23 23:26:26 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 
 # define MAX_PHILO 200
 
-struct s_info;
+struct	s_info;
 
 typedef enum e_bool
 {
@@ -56,8 +56,7 @@ typedef struct s_info
 	t_bool			quit;
 }	t_info;
 
-int		ft_atoi(const char *str, int *tab_num);
-
+int			ft_atoi(const char *str, int *tab_num);
 int			start(int ac, char **av);
 void		*waiter(void *ptr);
 void		*routine(void *arg);

@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:24:52 by beldemir          #+#    #+#             */
-/*   Updated: 2025/04/23 04:40:50 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/04/23 23:28:15 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ uint64_t	elapsed_time(t_info	*info)
 			info->time_init = (uint64_t)info->tv.tv_sec * 1000 + \
 			(uint64_t)info->tv.tv_usec / 1000;
 		else
-			return ((uint64_t)-1);
+			return ((uint64_t)(-1));
 		return (0);
 	}
 	else
@@ -29,7 +29,7 @@ uint64_t	elapsed_time(t_info	*info)
 			return ((uint64_t)info->tv.tv_sec * 1000 + \
 			(uint64_t)info->tv.tv_usec / 1000 - info->time_init);
 		else
-			return ((uint64_t)-1);
+			return ((uint64_t)(-1));
 	}
 }
 
@@ -55,7 +55,8 @@ static int	init_philos(t_info *info)
 		assign_values(info, &info->philos[ind], ind);
 	ind = -1;
 	while (++ind < info->philo_count)
-		if (pthread_create(&info->philos[ind].thr, NULL, routine, &info->philos[ind]) != 0)
+		if (pthread_create(&info->philos[ind].thr, NULL, routine, \
+		&info->philos[ind]) != 0)
 			return (1);
 	ind = -1;
 	while (++ind < info->philo_count)
@@ -68,7 +69,8 @@ static int	init_forks(t_info *info)
 {
 	int	ind;
 
-	info->forks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * info->philo_count);
+	info->forks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * \
+	info->philo_count);
 	if (!info->forks)
 		return (1);
 	ind = -1;
