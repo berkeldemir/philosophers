@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:24:52 by beldemir          #+#    #+#             */
-/*   Updated: 2025/04/23 23:28:15 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/04/24 03:25:17 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,15 @@
 
 uint64_t	elapsed_time(t_info	*info)
 {
-	if (!info->time_init)
+	if (info->time_init)
+	{
+		if (gettimeofday(&info->tv, NULL) == 0)
+			return ((uint64_t)info->tv.tv_sec * 1000 + \
+			(uint64_t)info->tv.tv_usec / 1000 - info->time_init);
+		else
+			return ((uint64_t)(-1));
+	}
+	else
 	{
 		if (gettimeofday(&info->tv, NULL) == 0)
 			info->time_init = (uint64_t)info->tv.tv_sec * 1000 + \
@@ -22,14 +30,6 @@ uint64_t	elapsed_time(t_info	*info)
 		else
 			return ((uint64_t)(-1));
 		return (0);
-	}
-	else
-	{
-		if (gettimeofday(&info->tv, NULL) == 0)
-			return ((uint64_t)info->tv.tv_sec * 1000 + \
-			(uint64_t)info->tv.tv_usec / 1000 - info->time_init);
-		else
-			return ((uint64_t)(-1));
 	}
 }
 
@@ -95,6 +95,8 @@ int	start(int ac, char **av)
 		return (1);
 	//printf("\n%d, %d, %d, %d\n", (int)info.time_to_die, (int)info.time_to_eat, (int)info.time_to_sleep, info.must_eat);
 	//printf("init time?: %lu\n", info.time_init);
+	if (pthread_mutex_init(info.write_lock, NULL) != 0)
+		return (1);
 	if (pthread_create(info.waiter, NULL, &waiter, &info) != 0)
 		return (1);
 	if (init_forks(&info) != 0)

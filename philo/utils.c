@@ -6,11 +6,24 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:02:47 by beldemir          #+#    #+#             */
-/*   Updated: 2025/04/23 04:40:11 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/04/24 03:19:22 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./philo.h"
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	int	i;
+
+	i = -1;
+	while (s1[++i] && s2[i])
+		if (s1[i] != s2[i])
+			return (-1);
+	if (s1[i] || s2[i])
+		return (-1);
+	return (0);
+}
 
 int	ft_atoi(const char *str, int *tab_num)
 {

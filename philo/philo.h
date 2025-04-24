@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 11:58:05 by beldemir          #+#    #+#             */
-/*   Updated: 2025/04/23 23:26:26 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/04/24 03:24:13 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ typedef struct s_phi
 
 typedef struct s_info
 {
+	pthread_mutex_t	*write_lock;
 	struct s_phi	*philos;
 	pthread_mutex_t	*forks;
 	pthread_t		*waiter;
