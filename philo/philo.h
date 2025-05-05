@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 11:58:05 by beldemir          #+#    #+#             */
-/*   Updated: 2025/04/24 03:24:13 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/04/25 20:50:05 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,12 @@
 # include <sys/time.h>
 
 # define MAX_PHILO 200
+
+# define MSG_TAKENFORK "has taken a fork"
+# define MSG_SLEEPING "is sleeping"
+# define MSG_THINKING "is thinking"
+# define MSG_EATING "is eating"
+# define MSG_DIED "died"
 
 struct	s_info;
 
@@ -59,6 +65,7 @@ typedef struct s_info
 
 int			ft_atoi(const char *str, int *tab_num);
 int			start(int ac, char **av);
+int			action(t_phi *phi, char *action);
 void		*waiter(void *ptr);
 void		*routine(void *arg);
 uint64_t	elapsed_time(t_info	*info);

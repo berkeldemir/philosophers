@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:24:52 by beldemir          #+#    #+#             */
-/*   Updated: 2025/04/24 05:57:10 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/04/25 20:51:58 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,13 @@ static int	anyone_starving(t_info *info)
 	{
 		if (elapsed_time(info) - info->philos[i].last_meal > info->time_to_die)
 		{
-			died(info->philos[i]);
+			died(&info->philos[i]);
 			info->quit = TRUE;
+			return (1);
 		}
 		i++;
 	}
+	return (0);
 }
 
 void	*waiter(void *ptr)

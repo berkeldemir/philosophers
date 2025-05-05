@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 10:56:51 by beldemir          #+#    #+#             */
-/*   Updated: 2025/04/24 03:43:21 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/04/25 20:52:47 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	action(t_phi *phi, char *action)
 {
 	if (pthread_mutex_lock(phi->info->write_lock) != 0)
 		return (1);
-	printf("%llu\t%i %s\n", elapsed_time(phi->info), phi->id, action);
+	printf("%lu\t%i %s\n", elapsed_time(phi->info), phi->id, action);
 	if (pthread_mutex_unlock(phi->info->write_lock) != 0)
 		return (1);
 	return (0);

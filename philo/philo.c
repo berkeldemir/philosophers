@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 11:56:37 by beldemir          #+#    #+#             */
-/*   Updated: 2025/04/23 04:42:59 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/04/25 17:35:15 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@ static int	arg_check(int ac, char **av)
 	while (++i < ac)
 		if (ft_atoi(av[i], NULL) != 0)
 			return (-1);
+	ft_atoi(av[i], &i);
+	if (i > MAX_PHILO)
+		return (-1);
 	return (0);
 }
 
