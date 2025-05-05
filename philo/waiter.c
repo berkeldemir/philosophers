@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:24:52 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/05 15:28:54 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/05 20:44:41 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,15 +42,18 @@ static int	must_eat_done(t_info *info)
 
 static int	anyone_starving(t_info *info)
 {
-	int	i;
-	
+	int			i;
+	uint64_t	philo_last_meal;
+
 	i = 0;
 	while (i < info->philo_count)
 	{
-		if (elapsed_time(info) - info->philos[i].last_meal > info->time_to_die)
+		pthread_mutex_lock(&info->philos[i].meal_lock);
+		philo_last_meal = info->philos[i].last_meal;
+		pthread_mutex_unlock(&info->philos[i].meal_lock);
+		if (elapsed_time(info) - philo_last_meal > info->time_to_die)
 		{
 			died(&info->philos[i]);
-			info->quit = TRUE;
 			return (1);
 		}
 		i++;
@@ -65,10 +68,45 @@ void	*waiter(void *ptr)
 	info = (t_info *)ptr;
 	while (1)
 	{
-		if (info->quit == TRUE || \
-		(info->must_eat >= 0 && must_eat_done(info) != 0) || \
-		anyone_starving(info) != 0)
+		if (anyone_starving(info) != 0 || \
+		(info->must_eat != -1 && must_eat_done(info) != 0))
+		{
+			pthread_mutex_lock(&info->quit_lock);
+			info->quit = TRUE;
+			pthread_mutex_unlock(&info->quit_lock);
 			break ;
+		}
+		usleep(100);
 	}
 	return (NULL);
 }
+
+/*
+void	*waiter(void *arg)
+{
+	t_info	*info = (t_info *)arg;
+	int		i;
+
+	while (1)
+	{
+		if (info->must_eat != -1 && must_eat_done(info) != 0)
+			return (NULL);
+		i = -1;
+		while (++i < info->philo_count)
+		{
+			pthread_mutex_lock(&info->philos[i].meal_lock);
+			if ((elapsed_time(info) - info->philos[i].last_meal) > info->time_to_die)
+			{
+				pthread_mutex_unlock(&info->philos[i].meal_lock);
+				pthread_mutex_lock(&info->quit_lock);
+				info->quit = TRUE;
+				pthread_mutex_unlock(&info->quit_lock);
+				action(&info->philos[i], MSG_DIED);
+				return (NULL);
+			}
+			pthread_mutex_unlock(&info->philos[i].meal_lock);
+		}
+		usleep(100); // Fazla CPU kullanımı engellemek için kısa uyku
+	}
+}
+*/

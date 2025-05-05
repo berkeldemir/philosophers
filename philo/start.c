@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:24:52 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/05 16:58:38 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/05 20:48:35 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ static void	assign_values(t_info *info, t_phi *phi, int ind)
 	phi->id = ind + 1;
 	phi->info = info;
 	phi->eat_count = 0;
-	phi->last_meal = 0;
 	phi->l_fork = &info->forks[ind];
 	phi->r_fork = &info->forks[(ind + 1) % info->philo_count];
 	pthread_mutex_init(&phi->meal_lock, NULL);
@@ -41,7 +40,7 @@ static int	init_philos(t_info *info)
 	pthread_join(info->waiter, NULL);
 	ind = -1;
 	while (++ind < info->philo_count)
-		pthread_join(info->philos[ind].thr, NULL); // Still problematic logic, see note below
+		pthread_join(info->philos[ind].thr, NULL);
 	return (0);
 }
 
@@ -55,31 +54,60 @@ static int	init_forks(t_info *info)
 		return (1);
 	ind = -1;
 	while (++ind < info->philo_count)
+	{
 		if (pthread_mutex_init(&info->forks[ind], NULL) != 0)
+		{
+			while (--ind >= 0)
+				pthread_mutex_destroy(&info->forks[ind]);
+			free(info->forks);
+			info->forks = NULL;
 			return (1);
+		}
+	}
 	return (0);
+}
+
+static void	cleanup(t_info *info)
+{
+	int	i;
+
+	i = -1;
+	if (info->forks)
+		while (++i < info->philo_count)
+			pthread_mutex_destroy(&info->forks[i]);
+	free(info->forks);
+	i = -1;
+	if (info->philos)
+		while (++i < info->philo_count)
+			pthread_mutex_destroy(&info->philos[i].meal_lock);
+	free(info->philos);
+	pthread_mutex_destroy(&info->write_lock);
+	pthread_mutex_destroy(&info->quit_lock);
 }
 
 int	start(int ac, char **av)
 {
 	t_info	info;
 
-	ft_atoi(av[1], (int *)&info.philo_count);
-	ft_atoi(av[2], (int *)&info.time_to_die);
-	ft_atoi(av[3], (int *)&info.time_to_eat);
-	ft_atoi(av[4], (int *)&info.time_to_sleep);
-	info.must_eat = -1;
-	if (ac == 6)
-		ft_atoi(av[5], &info.must_eat);
+	init_start(ac, av, &info);
 	if (pthread_mutex_init(&info.write_lock, NULL) != 0)
 		return (1);
+	if (pthread_mutex_init(&info.quit_lock, NULL) != 0)
+		return (pthread_mutex_destroy(&info.write_lock), 1);
 	if (init_forks(&info) != 0)
-		return (1);
-	info.quit = FALSE;
+		return (pthread_mutex_destroy(&info.write_lock), \
+		pthread_mutex_destroy(&info.quit_lock), 1);
 	info.time_init = get_current();
 	if (pthread_create(&info.waiter, NULL, &waiter, &info) != 0)
-		return (1);
+		return (cleanup(&info), 1);
 	if (init_philos(&info) != 0)
-		return (1);
+	{
+		pthread_mutex_lock(&info.quit_lock);
+		info.quit = TRUE;
+		pthread_mutex_unlock(&info.quit_lock);
+		pthread_join(info.waiter, NULL);
+		return (cleanup(&info), 1);
+	}
+	cleanup(&info);
 	return (0);
 }

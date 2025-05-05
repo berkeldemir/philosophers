@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 11:58:05 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/05 16:32:13 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/05 21:19:58 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ typedef struct s_info
 	pthread_mutex_t	*forks;
 	pthread_t		waiter;
 	int				philo_count;
-	struct timeval	tv;
 	uint64_t		time_init;
 	uint64_t		time_to_die;
 	uint64_t		time_to_eat;
@@ -65,7 +64,8 @@ typedef struct s_info
 	t_bool			quit;
 }	t_info;
 
-int			ft_atoi(const char *str, int *tab_num);
+int			ft_atoi(const char *str, unsigned long *tab_num);
+void		init_start(int ac, char **av, t_info *info);
 int			start(int ac, char **av);
 int			action(t_phi *phi, char *action);
 void		*waiter(void *ptr);

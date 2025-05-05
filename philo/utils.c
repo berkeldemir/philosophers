@@ -6,11 +6,25 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:02:47 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/05 15:15:42 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/05 21:20:02 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./philo.h"
+
+void	init_start(int ac, char **av, t_info *info)
+{
+	ft_atoi(av[1], (unsigned long *)&info->philo_count);
+	ft_atoi(av[2], (unsigned long *)&info->time_to_die);
+	ft_atoi(av[3], (unsigned long *)&info->time_to_eat);
+	ft_atoi(av[4], (unsigned long *)&info->time_to_sleep);
+	info->must_eat = -1;
+	if (ac == 6)
+		ft_atoi(av[5], (unsigned long *)&info->must_eat);
+	info->philos = NULL;
+	info->forks = NULL;
+	info->quit = FALSE;
+}
 
 int	ft_strcmp(char *s1, char *s2)
 {
@@ -25,10 +39,10 @@ int	ft_strcmp(char *s1, char *s2)
 	return (0);
 }
 
-int	ft_atoi(const char *str, int *tab_num)
+int	ft_atoi(const char *str, unsigned long *tab_num)
 {
-	int		i;
-	long	num;
+	int				i;
+	unsigned long	num;
 
 	if (!str)
 		return (-1);
