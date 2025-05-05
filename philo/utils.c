@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:02:47 by beldemir          #+#    #+#             */
-/*   Updated: 2025/04/25 20:55:52 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/05 15:15:42 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	ft_atoi(const char *str, int *tab_num)
 	int		i;
 	long	num;
 
-	if (!*tab_num)
+	if (!str)
 		return (-1);
 	i = 0;
 	num = 0;
@@ -45,7 +45,7 @@ int	ft_atoi(const char *str, int *tab_num)
 		if (num > INT_MAX)
 			return (-1);
 	}
-	if (!(str[i] == '\0' || str[i] == ' '))
+	if (str[i] != '\0' && !(str[i] == 32 || (str[i] <= 13 && str[i] >= 9)))
 		return (-1);
 	if (tab_num)
 		*tab_num = num;

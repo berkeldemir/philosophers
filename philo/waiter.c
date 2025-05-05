@@ -6,31 +6,37 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:24:52 by beldemir          #+#    #+#             */
-/*   Updated: 2025/04/25 20:51:58 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/05 15:28:54 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./philo.h"
 
-static void	died(t_phi *phi)
+void	died(t_phi *phi)
 {
-	if (action(phi, "died"))
-	{
-		
-	}
+	if (pthread_mutex_lock(&phi->info->write_lock))
+		return ;
+	printf("%lu\t%i %s\n", elapsed_time(phi->info), phi->id, MSG_DIED);
+	pthread_mutex_unlock(&phi->info->write_lock);
 }
 
 static int	must_eat_done(t_info *info)
 {
 	int	i;
+	int	done;
 
 	i = 0;
+	done = 0;
 	while (i < info->philo_count)
 	{
+		pthread_mutex_lock(&info->philos[i].meal_lock);
 		if (info->philos[i].eat_count >= info->must_eat)
-			return (1);
+			done++;
+		pthread_mutex_unlock(&info->philos[i].meal_lock);
 		i++;
 	}
+	if (done == info->philo_count)
+		return (1);
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 11:58:05 by beldemir          #+#    #+#             */
-/*   Updated: 2025/04/25 20:50:05 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/05 16:32:13 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,18 @@ typedef struct s_phi
 	int				eat_count;
 	uint64_t		last_meal;
 	struct s_info	*info;
+	pthread_mutex_t	meal_lock;
 	pthread_mutex_t	*l_fork;
 	pthread_mutex_t	*r_fork;
 }	t_phi;
 
 typedef struct s_info
 {
-	pthread_mutex_t	*write_lock;
+	pthread_mutex_t	write_lock;
+	pthread_mutex_t	quit_lock;
 	struct s_phi	*philos;
 	pthread_mutex_t	*forks;
-	pthread_t		*waiter;
+	pthread_t		waiter;
 	int				philo_count;
 	struct timeval	tv;
 	uint64_t		time_init;
@@ -68,6 +70,7 @@ int			start(int ac, char **av);
 int			action(t_phi *phi, char *action);
 void		*waiter(void *ptr);
 void		*routine(void *arg);
+uint64_t	get_current(void);
 uint64_t	elapsed_time(t_info	*info);
 
 #endif
