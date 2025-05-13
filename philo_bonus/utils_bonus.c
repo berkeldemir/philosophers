@@ -6,11 +6,11 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 21:32:56 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/05 21:47:23 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/13 22:13:52 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./philo.h"
+#include "./philo_bonus.h"
 
 void	init_start(int ac, char **av, t_info *info)
 {
@@ -22,8 +22,45 @@ void	init_start(int ac, char **av, t_info *info)
 	if (ac == 6)
 		ft_atoi(av[5], (unsigned long *)&info->must_eat);
 	info->philos = NULL;
-	info->forks = NULL;
-	info->quit = FALSE;
+	info->s_forks = NULL;
+	info->s_write = NULL;
+	info->s_death = NULL;
+	info->s_done_eating = NULL;
+}
+
+void	cleanup(t_info *info)
+{
+	if (info->s_forks)
+	{
+		sem_close(info->s_forks);
+		sem_unlink("/s_forks");
+	}
+	if (info->s_write)
+	{
+		sem_close(info->s_write);
+		sem_unlink("/s_write");
+	}
+	if (info->s_death)
+	{
+		sem_close(info->s_death);
+		sem_unlink("/s_death");
+	}
+	if (info->s_done_eating)
+	{
+		sem_close(info->s_done_eating);
+		sem_unlink("/s_done_eating");
+	}
+	if (info->philos)
+		free(info->philos);
+}
+
+void	ph_sleep(uint64_t duration)
+{
+	uint64_t	start;
+
+	start = get_current();
+	while ((get_current() - start) < duration)
+		usleep(100);
 }
 
 int	ft_strcmp(char *s1, char *s2)
