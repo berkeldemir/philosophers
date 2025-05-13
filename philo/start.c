@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:24:52 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/05 20:48:35 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/13 17:06:52 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static void	assign_values(t_info *info, t_phi *phi, int ind)
 	phi->id = ind + 1;
 	phi->info = info;
 	phi->eat_count = 0;
+	phi->last_meal = 0;
 	phi->l_fork = &info->forks[ind];
 	phi->r_fork = &info->forks[(ind + 1) % info->philo_count];
 	pthread_mutex_init(&phi->meal_lock, NULL);

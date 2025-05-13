@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 10:56:51 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/05 16:32:07 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/13 16:34:36 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ uint64_t	elapsed_time(t_info	*info)
 
 int	action(t_phi *phi, char *action)
 {
+	if (dead_end(phi))
+		return (-1);
 	if (pthread_mutex_lock(&phi->info->write_lock) != 0)
 		return (-1);
 	printf("%lu\t%i %s\n", elapsed_time(phi->info), phi->id, action);

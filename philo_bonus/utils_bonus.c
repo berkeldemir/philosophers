@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/23 12:02:47 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/13 17:05:55 by beldemir         ###   ########.fr       */
+/*   Created: 2025/05/05 21:32:56 by beldemir          #+#    #+#             */
+/*   Updated: 2025/05/05 21:47:23 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,6 @@ void	init_start(int ac, char **av, t_info *info)
 	info->philos = NULL;
 	info->forks = NULL;
 	info->quit = FALSE;
-}
-
-void	ph_sleep(uint64_t duration)
-{
-	uint64_t	start;
-
-	start = get_current();
-	while ((get_current() - start) < duration)
-		usleep(100);
 }
 
 int	ft_strcmp(char *s1, char *s2)

@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:24:52 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/05 20:44:41 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/13 16:40:49 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ static int	anyone_starving(t_info *info)
 	uint64_t	philo_last_meal;
 
 	i = 0;
+	philo_last_meal = 0;
 	while (i < info->philo_count)
 	{
 		pthread_mutex_lock(&info->philos[i].meal_lock);

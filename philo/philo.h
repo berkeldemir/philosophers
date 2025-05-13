@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 11:58:05 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/05 21:19:58 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/13 16:47:10 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,10 @@ typedef struct s_info
 }	t_info;
 
 int			ft_atoi(const char *str, unsigned long *tab_num);
+void		ph_sleep(uint64_t duration);
 void		init_start(int ac, char **av, t_info *info);
 int			start(int ac, char **av);
+t_bool		dead_end(t_phi *phi);
 int			action(t_phi *phi, char *action);
 void		*waiter(void *ptr);
 void		*routine(void *arg);
