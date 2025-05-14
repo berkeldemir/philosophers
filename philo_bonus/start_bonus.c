@@ -21,7 +21,6 @@ static void	*monitor(void *arg)
 	{
 		if (get_current() - phi->last_meal > phi->info->time_to_die)
 		{
-			sem_wait(phi->info->s_write);
 			action(phi, MSG_DIED);
 			sem_post(phi->info->s_death);
 			exit (1);
@@ -47,10 +46,18 @@ static int	init_semaphores(t_info *info)
 	}
 	if (info->s_forks == SEM_FAILED || info->s_write == SEM_FAILED || \
 	info->s_death == SEM_FAILED)
+	{
 		cleanup(info);
+		return (-1);
+	}
 	if (info->must_eat > 0)
+	{
 		if (info->s_done_eating == SEM_FAILED)
+		{
 			cleanup(info);
+			return (-1);
+		}
+	}
 	return (0);
 }
 
@@ -70,17 +77,12 @@ static void	should_quit(t_info *info, pid_t *pids)
 {
 	int	i;
 	int	done_eat;
-	int	death;
 
 	done_eat = 0;
-	death = 0;
 	while (1)
 	{
 		if (sem_wait(info->s_death) == 0)
-		{
-			death = 1;
 			break ;
-		}
 		if (info->must_eat > 0 && done_eat < info->philo_count && \
 		info->s_done_eating)
 		{
@@ -101,19 +103,41 @@ int	start(int ac, char **av)
 	pid_t	*pids;
 	int		i;
 
-	init_start(ac, av, &info);
-	init_semaphores(&info);
+	if (init_start(ac, av, &info) != 0)
+		return (-1);
+	if (init_semaphores(&info) != 0)
+		return (-1);
 	pids = (pid_t *)malloc(sizeof(pid_t) * info.philo_count);
 	if (!pids)
+	{
+		cleanup(&info);
 		return (-1);
+	}
+	info.philos = (t_phi *)malloc(sizeof(t_phi) * info.philo_count);
+	if (!info.philos)
+	{
+		free(pids);
+		cleanup(&info);
+		return (-1);
+	}
 	i = -1;
 	while (++i < info.philo_count)
 	{
+		info.philos[i].info = &info;
 		pids[i] = fork();
 		if (pids[i] == 0)
-			(init_philo(&info, i), exit(0));
+			init_philo(&info, i);
+		else if (pids[i] < 0)
+		{
+			while (--i >= 0)
+				kill(pids[i], SIGKILL);
+			free(pids);
+			cleanup(&info);
+			return (-1);
+		}
 	}
 	should_quit(&info, pids);
 	free(pids);
+	cleanup(&info);
 	return (0);
 }

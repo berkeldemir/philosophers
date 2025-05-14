@@ -26,22 +26,16 @@ void	routine(t_phi *phi)
 		(one_philo(phi), exit(0));
 	while (phi->info->must_eat == -1 || phi->eat_count < phi->info->must_eat)
 	{
-		sem_wait(phi->info->s_write);
 		action(phi, MSG_THINKING);
-		sem_post(phi->info->s_write);
 		sem_wait(phi->info->s_forks);
 		sem_wait(phi->info->s_forks);
-		sem_wait(phi->info->s_write);
 		action(phi, MSG_EATING);
-		sem_post(phi->info->s_write);
 		phi->eat_count++;
 		phi->last_meal = get_current();
 		ph_sleep(phi->info->time_to_eat);
 		sem_post(phi->info->s_forks);
 		sem_post(phi->info->s_forks);
-		sem_wait(phi->info->s_write);
 		action(phi, MSG_SLEEPING);
-		sem_post(phi->info->s_write);
 		ph_sleep(phi->info->time_to_sleep);
 	}
 	if (phi->info->must_eat > 0)

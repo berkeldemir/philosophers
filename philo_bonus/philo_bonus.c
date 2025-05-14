@@ -29,10 +29,20 @@ static int	arg_check(int ac, char **av)
 int	main(int ac, char **av)
 {
 	if (ac != 5 && ac != 6)
+	{
+		printf("Usage: ./philo_bonus <num_philos> \
+		<time_die> <time_eat> <time_sleep> [must_eat_count]\n");
 		return (1);
+	}
 	if (arg_check(ac, av) != 0)
+	{
+		printf("Error: Invalid arguments.\n");
 		return (2);
+	}
 	if (start(ac, av) != 0)
+	{
+		printf("Error: Initialization or runtime failure.\n");
 		return (3);
+	}
 	return (0);
 }

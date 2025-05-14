@@ -68,7 +68,7 @@ typedef struct s_info
 void		cleanup(t_info *info);
 int			ft_atoi(const char *str, unsigned long *tab_num);
 void		ph_sleep(uint64_t duration);
-void		init_start(int ac, char **av, t_info *info);
+int			init_start(int ac, char **av, t_info *info);
 int			start(int ac, char **av);
 t_bool		dead_end(t_phi *phi);
 int			action(t_phi *phi, char *action);

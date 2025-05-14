@@ -12,7 +12,7 @@
 
 #include "./philo_bonus.h"
 
-void	init_start(int ac, char **av, t_info *info)
+int	init_start(int ac, char **av, t_info *info)
 {
 	ft_atoi(av[1], (unsigned long *)&info->philo_count);
 	ft_atoi(av[2], (unsigned long *)&info->time_to_die);
@@ -26,6 +26,9 @@ void	init_start(int ac, char **av, t_info *info)
 	info->s_write = NULL;
 	info->s_death = NULL;
 	info->s_done_eating = NULL;
+	info->time_init = get_current();
+	info->quit = FALSE;
+	return (0);
 }
 
 void	cleanup(t_info *info)
