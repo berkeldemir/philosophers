@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 21:33:20 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/13 22:15:31 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/14 18:42:52 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,21 +54,21 @@ typedef struct s_info
 	sem_t			*s_forks;
 	sem_t			*s_write;
 	sem_t			*s_death;
-	sem_t			*s_done_eating;
-	struct s_phi	*philos;
+	sem_t			*s_ate;
+	sem_t			s_done;
+	struct s_phi	philo;
 	int				philo_count;
 	uint64_t		time_init;
 	uint64_t		time_to_die;
 	uint64_t		time_to_eat;
 	uint64_t		time_to_sleep;
 	int				must_eat;
-	t_bool			quit;
 }	t_info;
 
 void		cleanup(t_info *info);
 int			ft_atoi(const char *str, unsigned long *tab_num);
 void		ph_sleep(uint64_t duration);
-int			init_start(int ac, char **av, t_info *info);
+void		init_start(int ac, char **av, t_info *info);
 int			start(int ac, char **av);
 t_bool		dead_end(t_phi *phi);
 int			action(t_phi *phi, char *action);

@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 18:55:52 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/13 22:17:54 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/14 18:46:37 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,10 @@ static void	one_philo(t_phi *phi)
 void	routine(t_phi *phi)
 {
 	if (phi->info->philo_count == 1)
-		(one_philo(phi), exit(0));
+	{
+		one_philo(phi);
+		return ;
+	}
 	while (phi->info->must_eat == -1 || phi->eat_count < phi->info->must_eat)
 	{
 		action(phi, MSG_THINKING);
@@ -31,7 +34,7 @@ void	routine(t_phi *phi)
 		sem_wait(phi->info->s_forks);
 		action(phi, MSG_EATING);
 		phi->eat_count++;
-		phi->last_meal = get_current();
+		phi->last_meal = elapsed_time(phi->info);
 		ph_sleep(phi->info->time_to_eat);
 		sem_post(phi->info->s_forks);
 		sem_post(phi->info->s_forks);
@@ -39,6 +42,6 @@ void	routine(t_phi *phi)
 		ph_sleep(phi->info->time_to_sleep);
 	}
 	if (phi->info->must_eat > 0)
-		sem_post(phi->info->s_done_eating);
-	exit(0);
+		sem_post(phi->info->s_ate);
+	sem_post(&phi->info->s_done);
 }

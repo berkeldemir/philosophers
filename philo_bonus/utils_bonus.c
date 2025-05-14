@@ -6,13 +6,13 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 21:32:56 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/13 22:13:52 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/14 18:46:55 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./philo_bonus.h"
 
-int	init_start(int ac, char **av, t_info *info)
+void	init_start(int ac, char **av, t_info *info)
 {
 	ft_atoi(av[1], (unsigned long *)&info->philo_count);
 	ft_atoi(av[2], (unsigned long *)&info->time_to_die);
@@ -21,14 +21,10 @@ int	init_start(int ac, char **av, t_info *info)
 	info->must_eat = -1;
 	if (ac == 6)
 		ft_atoi(av[5], (unsigned long *)&info->must_eat);
-	info->philos = NULL;
 	info->s_forks = NULL;
 	info->s_write = NULL;
 	info->s_death = NULL;
-	info->s_done_eating = NULL;
-	info->time_init = get_current();
-	info->quit = FALSE;
-	return (0);
+	info->s_ate = NULL;
 }
 
 void	cleanup(t_info *info)
@@ -48,13 +44,12 @@ void	cleanup(t_info *info)
 		sem_close(info->s_death);
 		sem_unlink("/s_death");
 	}
-	if (info->s_done_eating)
+	if (info->s_ate)
 	{
-		sem_close(info->s_done_eating);
-		sem_unlink("/s_done_eating");
+		sem_close(info->s_ate);
+		sem_unlink("/s_ate");
 	}
-	if (info->philos)
-		free(info->philos);
+	sem_destroy(&info->s_done);
 }
 
 void	ph_sleep(uint64_t duration)
