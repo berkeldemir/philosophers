@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 21:34:19 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/14 18:47:19 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/15 17:56:56 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ static void	init_philo(t_info *info, pid_t *pids)
 			pthread_create(&info->philo.self_monitor, \
 			NULL, monitor, (void *)&info->philo);
 			(pthread_detach(info->philo.self_monitor), routine(&info->philo));
+			return ;
 		}
 		else if (pids[i] < 0)
 		{
