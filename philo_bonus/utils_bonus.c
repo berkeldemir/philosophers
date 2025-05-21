@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 21:32:56 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/14 18:46:55 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/21 19:00:59 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,26 +30,15 @@ void	init_start(int ac, char **av, t_info *info)
 void	cleanup(t_info *info)
 {
 	if (info->s_forks)
-	{
-		sem_close(info->s_forks);
-		sem_unlink("/s_forks");
-	}
+		(sem_close(info->s_forks), sem_unlink("/s_forks"));
 	if (info->s_write)
-	{
-		sem_close(info->s_write);
-		sem_unlink("/s_write");
-	}
+		(sem_close(info->s_write), sem_unlink("/s_write"));
 	if (info->s_death)
-	{
-		sem_close(info->s_death);
-		sem_unlink("/s_death");
-	}
+		(sem_close(info->s_death), sem_unlink("/s_death"));
 	if (info->s_ate)
-	{
-		sem_close(info->s_ate);
-		sem_unlink("/s_ate");
-	}
-	sem_destroy(&info->s_done);
+		(sem_close(info->s_ate), sem_unlink("/s_ate"));
+	if (info->s_done)
+   		(sem_close(info->s_done), sem_unlink("/s_done"));
 }
 
 void	ph_sleep(uint64_t duration)

@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 18:55:52 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/14 18:46:37 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/21 18:59:05 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,5 @@ void	routine(t_phi *phi)
 	}
 	if (phi->info->must_eat > 0)
 		sem_post(phi->info->s_ate);
-	sem_post(&phi->info->s_done);
+	sem_post(phi->info->s_done);
 }

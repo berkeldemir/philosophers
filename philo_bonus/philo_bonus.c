@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 21:32:12 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/14 17:07:59 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/21 19:03:10 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,20 +29,10 @@ static int	arg_check(int ac, char **av)
 int	main(int ac, char **av)
 {
 	if (ac != 5 && ac != 6)
-	{
-		printf("Usage: ./philo_bonus <num_philos> \
-		<time_die> <time_eat> <time_sleep> [must_eat_count]\n");
 		return (1);
-	}
 	if (arg_check(ac, av) != 0)
-	{
-		printf("Error: Invalid arguments.\n");
 		return (2);
-	}
 	if (start(ac, av) != 0)
-	{
-		printf("Error: Initialization or runtime failure.\n");
 		return (3);
-	}
 	return (0);
 }
