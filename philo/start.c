@@ -6,11 +6,31 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:24:52 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/13 17:06:52 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/21 18:24:28 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./philo.h"
+
+static void	cleanup(t_info *info)
+{
+	int	i;
+
+	i = -1;
+	if (info->forks)
+		while (++i < info->philo_count)
+			pthread_mutex_destroy(&info->forks[i]);
+	if (info->forks)
+		free(info->forks);
+	i = -1;
+	if (info->philos)
+		while (++i < info->philo_count)
+			pthread_mutex_destroy(&info->philos[i].meal_lock);
+	if (info->philos)
+		free(info->philos);
+	pthread_mutex_destroy(&info->write_lock);
+	pthread_mutex_destroy(&info->quit_lock);
+}
 
 static void	assign_values(t_info *info, t_phi *phi, int ind)
 {
@@ -20,7 +40,8 @@ static void	assign_values(t_info *info, t_phi *phi, int ind)
 	phi->last_meal = 0;
 	phi->l_fork = &info->forks[ind];
 	phi->r_fork = &info->forks[(ind + 1) % info->philo_count];
-	pthread_mutex_init(&phi->meal_lock, NULL);
+	if (pthread_mutex_init(&phi->meal_lock, NULL) != 0)
+		(printf("AMANİİİNNN"), exit(66));
 }
 
 static int	init_philos(t_info *info)
@@ -33,6 +54,8 @@ static int	init_philos(t_info *info)
 	ind = -1;
 	while (++ind < info->philo_count)
 		assign_values(info, &info->philos[ind], ind);
+	if (pthread_create(&info->waiter, NULL, &waiter, info) != 0)
+		return (cleanup(info), 1);
 	ind = -1;
 	while (++ind < info->philo_count)
 		if (pthread_create(&info->philos[ind].thr, NULL, routine, \
@@ -68,24 +91,6 @@ static int	init_forks(t_info *info)
 	return (0);
 }
 
-static void	cleanup(t_info *info)
-{
-	int	i;
-
-	i = -1;
-	if (info->forks)
-		while (++i < info->philo_count)
-			pthread_mutex_destroy(&info->forks[i]);
-	free(info->forks);
-	i = -1;
-	if (info->philos)
-		while (++i < info->philo_count)
-			pthread_mutex_destroy(&info->philos[i].meal_lock);
-	free(info->philos);
-	pthread_mutex_destroy(&info->write_lock);
-	pthread_mutex_destroy(&info->quit_lock);
-}
-
 int	start(int ac, char **av)
 {
 	t_info	info;
@@ -99,8 +104,6 @@ int	start(int ac, char **av)
 		return (pthread_mutex_destroy(&info.write_lock), \
 		pthread_mutex_destroy(&info.quit_lock), 1);
 	info.time_init = get_current();
-	if (pthread_create(&info.waiter, NULL, &waiter, &info) != 0)
-		return (cleanup(&info), 1);
 	if (init_philos(&info) != 0)
 	{
 		pthread_mutex_lock(&info.quit_lock);

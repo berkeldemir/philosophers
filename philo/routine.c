@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 14:02:41 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/13 16:48:03 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/21 18:03:49 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static int	lock_both_forks(t_phi *phi)
 static int	ph_routine(t_phi *phi)
 {
 	if (phi->id % 2 == 0)
-		ph_sleep(10);
+		ph_sleep(100);
 	while (dead_end(phi) == FALSE)
 	{
 		action(phi, MSG_THINKING);
