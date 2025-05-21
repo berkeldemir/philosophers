@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 18:55:52 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/21 18:59:05 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/21 17:29:38 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,17 @@ void	routine(t_phi *phi)
 	{
 		action(phi, MSG_THINKING);
 		sem_wait(phi->info->s_forks);
+		action(phi, MSG_TAKENFORK);
 		sem_wait(phi->info->s_forks);
+		action(phi, MSG_TAKENFORK);
 		action(phi, MSG_EATING);
 		phi->eat_count++;
 		phi->last_meal = elapsed_time(phi->info);
 		ph_sleep(phi->info->time_to_eat);
 		sem_post(phi->info->s_forks);
 		sem_post(phi->info->s_forks);
+		if (!(phi->info->must_eat == -1 || phi->eat_count < phi->info->must_eat))
+			break ;
 		action(phi, MSG_SLEEPING);
 		ph_sleep(phi->info->time_to_sleep);
 	}

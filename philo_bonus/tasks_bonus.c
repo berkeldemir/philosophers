@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 18:14:30 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/14 16:57:26 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/21 17:37:50 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,12 @@ uint64_t	elapsed_time(t_info	*info)
 	return (get_current() - info->time_init);
 }
 
+
 int	action(t_phi *phi, char *action)
 {
 	sem_wait(phi->info->s_write);
 	printf("%lu\t%i %s\n", elapsed_time(phi->info), phi->id, action);
-	sem_post(phi->info->s_write);
+	if (action[0] != 'd')
+		sem_post(phi->info->s_write);
 	return (0);
 }
