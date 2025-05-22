@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 18:55:52 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/21 17:29:38 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/22 16:41:54 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,9 @@ static void	one_philo(t_phi *phi)
 void	routine(t_phi *phi)
 {
 	if (phi->info->philo_count == 1)
-	{
-		one_philo(phi);
-		return ;
-	}
+		return(one_philo(phi));
+	if (phi->id % 2 == 0)
+		ph_sleep(60);
 	while (phi->info->must_eat == -1 || phi->eat_count < phi->info->must_eat)
 	{
 		action(phi, MSG_THINKING);

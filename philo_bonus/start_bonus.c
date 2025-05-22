@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 21:34:19 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/21 17:49:53 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/22 15:18:43 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,11 @@ static void	*monitor(void *arg)
 		{
 			action(phi, MSG_DIED);
 			sem_post(phi->info->s_death);
-			return (NULL); 
+			break ;
 		}
 		usleep(100);
 	}
+	return (NULL);
 }
 
 static int	init_semaphores(t_info *info)
@@ -35,6 +36,7 @@ static int	init_semaphores(t_info *info)
 	sem_unlink("/s_write");
 	sem_unlink("/s_death");
 	sem_unlink("/s_done");
+	info->s_ate = SEM_FAILED;
 	info->s_forks = sem_open("/s_forks", O_CREAT | O_EXCL, 0644, \
 	info->philo_count);
 	info->s_write = sem_open("/s_write", O_CREAT | O_EXCL, 0644, 1);
@@ -53,7 +55,7 @@ static int	init_semaphores(t_info *info)
 	return (0);
 }
 
-static int	init_philo(t_info *info, pid_t *pids)
+static int	init_philo(t_info *info)
 {
 	int	i;
 
@@ -64,20 +66,19 @@ static int	init_philo(t_info *info, pid_t *pids)
 	i = -1;
 	while (++i < info->philo_count)
 	{
-		pids[i] = fork();
-		if (pids[i] == 0)
+		info->pids[i] = fork();
+		if (info->pids[i] == 0)
 		{
 			info->philo.id = i + 1;
 			pthread_create(&info->philo.self_monitor, \
 			NULL, monitor, (void *)&info->philo);
 			routine(&info->philo);
-			(pthread_join(info->philo.self_monitor, NULL));//, routine(&info->philo));
-			exit(0);
+			return (pthread_join(info->philo.self_monitor, NULL), 1);
 		}
-		else if (pids[i] < 0)
+		else if (info->pids[i] < 0)
 		{
 			while (--i >= 0)
-				kill(pids[i], SIGKILL);
+				kill(info->pids[i], SIGKILL);
 			return (0);
 		}
 	}
@@ -101,27 +102,26 @@ static void	*watcher(void *arg)
 int	start(int ac, char **av)
 {
 	t_info	info;
-	pid_t	*pids;
 	int		i;
 
 	init_start(ac, av, &info);
 	if (init_semaphores(&info) != 0)
 		return (-1);
-	pids = (pid_t *)malloc(sizeof(pid_t) * info.philo_count);
-	if (!pids)
+	info.pids = (pid_t *)malloc(sizeof(pid_t) * info.philo_count);
+	if (!info.pids)
 		(cleanup(&info), exit(1));
-	if (init_philo(&info, pids) == 0)
+	if (init_philo(&info) == 0)
 		(cleanup(&info), exit(1));
 	i = -1;
-	while (++i < info.philo_count)
-		sem_wait(info.s_done);
+	/*while (++i < info.philo_count)
+		sem_wait(info.s_done);*/
 	if (info.must_eat > 0)
 		(pthread_create(&info.watcher, NULL, watcher, &info), \
-		pthread_detach(info.watcher));
+		pthread_join(info.watcher, NULL));
 	sem_wait(info.s_death);
 	i = -1;
 	while (++i < info.philo_count)
-		kill(pids[i], SIGKILL);
-	(free(pids), cleanup(&info), exit(0));
+		kill(info.pids[i], SIGKILL);
+	(cleanup(&info), exit(0));
 	return (0);
 }

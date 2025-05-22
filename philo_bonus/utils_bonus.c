@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 21:32:56 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/21 19:00:59 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/22 14:48:26 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	cleanup(t_info *info)
 		(sem_close(info->s_ate), sem_unlink("/s_ate"));
 	if (info->s_done)
    		(sem_close(info->s_done), sem_unlink("/s_done"));
+	free(info->pids);
 }
 
 void	ph_sleep(uint64_t duration)
@@ -50,18 +51,7 @@ void	ph_sleep(uint64_t duration)
 		usleep(100);
 }
 
-int	ft_strcmp(char *s1, char *s2)
-{
-	int	i;
 
-	i = -1;
-	while (s1[++i] && s2[i])
-		if (s1[i] != s2[i])
-			return (-1);
-	if (s1[i] || s2[i])
-		return (-1);
-	return (0);
-}
 
 int	ft_atoi(const char *str, unsigned long *tab_num)
 {
