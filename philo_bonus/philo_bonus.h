@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 21:33:20 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/22 14:27:16 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/22 22:01:43 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ typedef struct s_info
 	sem_t			*s_death;
 	sem_t			*s_ate;
 	sem_t			*s_done;
+	t_bool			done;
 	pthread_t		watcher;
 	struct s_phi	philo;
 	int				philo_count;

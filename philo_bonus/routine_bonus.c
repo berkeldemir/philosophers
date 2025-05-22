@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 18:55:52 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/22 19:21:54 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/22 22:14:33 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,25 +24,21 @@ void	routine(t_phi *phi)
 {
 	if (phi->info->philo_count == 1)
 		return (one_philo(phi));
-	if (phi->id % 2 == 0)
-		ph_sleep(60);
+	if (phi->id % 2 == 1)
+		usleep(1000);
 	while (phi->info->must_eat == -1 || phi->eat_count < phi->info->must_eat)
 	{
 		action(phi, MSG_THINKING);
-		sem_wait(phi->info->s_forks);
-		action(phi, MSG_TAKENFORK);
-		sem_wait(phi->info->s_forks);
-		action(phi, MSG_TAKENFORK);
+		(sem_wait(phi->info->s_forks), action(phi, MSG_TAKENFORK));
+		(sem_wait(phi->info->s_forks), action(phi, MSG_TAKENFORK));
 		action(phi, MSG_EATING);
-		phi->eat_count++;
 		phi->last_meal = elapsed_time(phi->info);
+		phi->eat_count++;
 		ph_sleep(phi->info->time_to_eat);
-		sem_post(phi->info->s_forks);
-		sem_post(phi->info->s_forks);
+		(sem_post(phi->info->s_forks), sem_post(phi->info->s_forks));
 		if (phi->info->must_eat != -1 && phi->eat_count >= phi->info->must_eat)
 			break ;
-		action(phi, MSG_SLEEPING);
-		ph_sleep(phi->info->time_to_sleep);
+		(action(phi, MSG_SLEEPING), ph_sleep(phi->info->time_to_sleep));
 	}
 	if (phi->info->must_eat > 0)
 		sem_post(phi->info->s_ate);

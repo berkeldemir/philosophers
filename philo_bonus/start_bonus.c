@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 21:34:19 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/22 19:23:12 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/22 22:16:26 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,23 @@
 static void	*monitor(void *arg)
 {
 	t_phi	*phi;
+	t_bool	done;
 
 	phi = (t_phi *)arg;
 	while (1)
 	{
-		if (elapsed_time(phi->info) - phi->last_meal > phi->info->time_to_die)
+		sem_wait(phi->info->s_done);
+		done = phi->info->done;
+		sem_post(phi->info->s_done);
+		if (done == FALSE && \
+		elapsed_time(phi->info) - phi->last_meal > phi->info->time_to_die)
 		{
 			action(phi, MSG_DIED);
 			sem_post(phi->info->s_death);
-			break ;
+			//sem_wait(phi->info->s_done);
+			phi->info->done = TRUE;
+			//sem_post(phi->info->s_done);
+			exit(1);
 		}
 		usleep(100);
 	}
@@ -59,10 +67,6 @@ static int	init_philo(t_info *info)
 {
 	int	i;
 
-	info->philo.info = info;
-	info->time_init = get_current();
-	info->philo.eat_count = 0;
-	info->philo.last_meal = 0;
 	i = -1;
 	while (++i < info->philo_count)
 	{
@@ -78,7 +82,7 @@ static int	init_philo(t_info *info)
 		{
 			while (--i >= 0)
 				kill(info->pids[i], SIGKILL);
-			return (0);
+			return (cleanup(info), 1);
 		}
 	}
 	return (1);
@@ -94,6 +98,9 @@ static void	*watcher(void *arg)
 	while (done_eat < info->philo_count)
 		if (sem_wait(info->s_ate) == 0)
 			done_eat++;
+	sem_wait(info->s_done);
+	info->done = TRUE;
+	sem_post(info->s_done);
 	sem_post(info->s_death);
 	return (NULL);
 }
@@ -109,6 +116,10 @@ int	start(int ac, char **av)
 	info.pids = (pid_t *)malloc(sizeof(pid_t) * info.philo_count);
 	if (!info.pids)
 		(cleanup(&info), exit(1));
+	info.philo.info = &info;
+	info.time_init = get_current();
+	info.philo.eat_count = 0;
+	info.philo.last_meal = 0;
 	if (init_philo(&info) == 0)
 		(cleanup(&info), exit(1));
 	i = -1;
