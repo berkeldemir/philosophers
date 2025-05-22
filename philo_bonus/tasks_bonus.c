@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 18:14:30 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/21 17:37:50 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/22 19:20:33 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ uint64_t	elapsed_time(t_info	*info)
 {
 	return (get_current() - info->time_init);
 }
-
 
 int	action(t_phi *phi, char *action)
 {

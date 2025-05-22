@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 21:34:19 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/22 15:18:43 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/05/22 19:23:12 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static int	init_semaphores(t_info *info)
 	}
 	if (info->s_forks == SEM_FAILED || info->s_write == SEM_FAILED || \
 		info->s_death == SEM_FAILED || info->s_done == SEM_FAILED)
-			return (cleanup(info), -1);
+		return (cleanup(info), -1);
 	return (0);
 }
 
@@ -70,8 +70,7 @@ static int	init_philo(t_info *info)
 		if (info->pids[i] == 0)
 		{
 			info->philo.id = i + 1;
-			pthread_create(&info->philo.self_monitor, \
-			NULL, monitor, (void *)&info->philo);
+			pthread_create(&info->philo.self_monitor, NULL, monitor, (void *)&info->philo);
 			routine(&info->philo);
 			return (pthread_join(info->philo.self_monitor, NULL), 1);
 		}
@@ -113,8 +112,6 @@ int	start(int ac, char **av)
 	if (init_philo(&info) == 0)
 		(cleanup(&info), exit(1));
 	i = -1;
-	/*while (++i < info.philo_count)
-		sem_wait(info.s_done);*/
 	if (info.must_eat > 0)
 		(pthread_create(&info.watcher, NULL, watcher, &info), \
 		pthread_join(info.watcher, NULL));
