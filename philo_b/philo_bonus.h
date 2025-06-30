@@ -5,6 +5,8 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <sys/time.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 # include <pthread.h>
 # include <semaphore.h>
 # include <signal.h>
@@ -45,11 +47,9 @@ typedef struct	s_data
 	sem_t		*start;
 	sem_t		*forks;
 	sem_t		*write;
-	sem_t		*done;
 	sem_t		*quit;
 	t_bool		exit;
 	t_philo 	philo;
-	pthread_t	watcher;
 	int			philo_count;
 	uint64_t	time_init;
 	uint64_t	time_to_die;
@@ -66,7 +66,6 @@ int			action(t_philo *phi, char *action);
 
 // threads.c
 void	*monitor(void *arg);
-void	*watcher(void *arg);
 void	ph_wait_to_end(t_data *data);
 
 // utils.c

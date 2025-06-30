@@ -49,8 +49,6 @@ void	cleanup(t_data *data)
 		(sem_close(data->forks), sem_unlink("/forks"));
 	if (data->write)
 		(sem_close(data->write), sem_unlink("/write"));
-	if (data->done)
-		(sem_close(data->done), sem_unlink("/done"));
 	if (data->quit)
 		(sem_close(data->quit), sem_unlink("/quit"));
 	if (data->pids)

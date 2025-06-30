@@ -25,6 +25,13 @@ uint64_t	elapsed_time(t_data	*data)
 
 int	action(t_philo *phi, char *action)
 {
+	int	quit_check;
+
+	sem_wait(phi->data->quit);
+	quit_check = phi->data->exit;
+	sem_post(phi->data->quit);
+	if (quit_check == TRUE)
+		return (0);
 	sem_wait(phi->data->write);
 	printf("%lu\t%i %s\n", elapsed_time(phi->data), phi->id, action);
 	if (ft_strcmp(action, MSG_DIED) != 0)
@@ -34,7 +41,8 @@ int	action(t_philo *phi, char *action)
 		sem_wait(phi->data->quit);
 		phi->data->exit = TRUE;
 		sem_post(phi->data->quit);
+		return (0);
 	}
-	return (0);
+	return (1);
 }
 
