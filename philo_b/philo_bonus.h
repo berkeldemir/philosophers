@@ -49,7 +49,7 @@ typedef struct	s_data
 	sem_t		*write;
 	sem_t		*quit;
 	t_bool		exit;
-	t_philo 	philo;
+	t_philo 	*philo;
 	int			philo_count;
 	uint64_t	time_init;
 	uint64_t	time_to_die;

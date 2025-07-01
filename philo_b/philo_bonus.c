@@ -31,16 +31,20 @@ static int	ph_init_philos(t_data *data)
 	int	i;
 
 	i = -1;
+	data->time_init = get_current();
 	while (++i < data->philo_count)
 	{
 		data->pids[i] = fork();
 		if (data->pids[i] == 0)
 		{
-			data->philo.id = i + 1;
-			pthread_create(&data->philo.monitor, NULL, monitor, \
-			(void *)&data->philo);
-			pthread_detach(data->philo.monitor);
-			routine(&data->philo);
+			data->philo[i].data = data;
+			data->philo[i].eat_count = 0;
+			data->philo[i].last_meal = 0;
+			data->philo[i].id = i + 1;
+			pthread_create(&data->philo[i].monitor, NULL, monitor, \
+			(void *)&data->philo[i]);
+			pthread_detach(data->philo[i].monitor);
+			routine(&data->philo[i]);
 			return (1);
 		}
 		else if (data->pids[i] < 0)
@@ -94,7 +98,6 @@ static int ph_init(int ac, char **av, t_data *data)
 	data->write = NULL;
 	data->quit = NULL;
 	data->exit = FALSE;
-	data->time_init = get_current();
 	return (0);
 }
 
@@ -109,9 +112,9 @@ int	main(int ac, char **av)
 	data.pids = (pid_t *)malloc(sizeof(pid_t) * data.philo_count);
 	if (!data.pids)
 		return (cleanup(&data), 1);
-	data.philo.data = &data;
-	data.philo.eat_count = 0;
-	data.philo.last_meal = 0;
+	data.philo = (t_philo *)malloc(sizeof(t_philo) * data.philo_count);
+	if (!data.philo)
+		return (cleanup(&data), 2);
 	if (ph_init_philos(&data) != 0)
 		return (cleanup(&data), 3);
 	ph_wait_to_end(&data);
