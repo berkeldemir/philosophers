@@ -5,7 +5,7 @@ static void	routine(t_philo *phi)
 	sem_wait(phi->data->start);
 	phi->last_meal = elapsed_time(phi->data);
 	if (phi->id % 2 == 1)
-		usleep(1000);
+		ph_sleep(phi->data->time_to_eat / 2);
 	//write(1, "XX", 2);
 	while (1)
 	{

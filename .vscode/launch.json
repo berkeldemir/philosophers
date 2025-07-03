@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
-      "cwd": "/home/kali/Desktop/philosophers/philo_bonus",
-      "program": "/home/kali/Desktop/philosophers/philo_bonus/build/Debug/outDebug",
+      "cwd": "/home/kali/Desktop/philosophers/philo_b",
+      "program": "/home/kali/Desktop/philosophers/philo_b/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
