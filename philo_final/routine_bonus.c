@@ -6,13 +6,13 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 16:45:14 by beldemir          #+#    #+#             */
-/*   Updated: 2025/07/09 13:39:54 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/07/09 17:00:37 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./philo_bonus.h"
 
-uint64_t	get_curr(uint16_t time_init)
+uint64_t	get_curr(uint64_t time_init)
 {
 	struct timeval	tv;
 	uint64_t		curr;
@@ -20,7 +20,7 @@ uint64_t	get_curr(uint16_t time_init)
 	if (gettimeofday(&tv, NULL) != 0)
 		return (-1);
 	curr = ((uint64_t)tv.tv_sec * 1000 + (uint64_t)tv.tv_usec / 1000);
-	curr -= time_init;
+	curr = curr - time_init;
 	return (curr);
 }
 
@@ -56,12 +56,30 @@ int		ph_print(t_phi *phi, char *act)
 	return (0);
 }
 
-void	*self_routine(void *arg)
+void	*exit_check(void *arg)
 {
 	t_phi	*phi;
 	
 	phi = (t_phi *)arg;
+	pthread_detach(phi->exitcheck);
 	sem_wait(phi->table->s_quit);
+	exit_noleak(phi->table);
+	return (NULL);
+}
+
+void	*self_control(void *arg)
+{
+	t_phi	*phi;
+	
+	phi = (t_phi *)arg;
+	pthread_detach(phi->self);
+	while (1)
+	{
+		if (get_curr(phi->table->time_init) - phi->last_meal > phi->table->time_to_die)
+			if (ph_print(phi, MSG_DIED))
+				break ;
+		usleep(100);
+	}
 	exit_noleak(phi->table);
 	return (NULL);
 }

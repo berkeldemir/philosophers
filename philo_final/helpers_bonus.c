@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 15:01:28 by beldemir          #+#    #+#             */
-/*   Updated: 2025/07/09 13:32:36 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/07/09 16:35:47 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,5 +69,7 @@ void	exit_noleak(t_table *table)
 		sem_close(table->s_print);
 	if (table->s_ate)
 		sem_close(table->s_ate);
+	if (table->s_quit)
+		sem_close(table->s_quit);
 	exit(0);
 }

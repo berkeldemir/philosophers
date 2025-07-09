@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 15:01:33 by beldemir          #+#    #+#             */
-/*   Updated: 2025/07/09 13:35:04 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/07/09 16:20:28 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef struct s_phi
 	uint64_t	last_meal;
 	int			ate;
 	pthread_t	self;
+	pthread_t	exitcheck;
 	t_table		*table;
 }	t_phi;
 
@@ -68,12 +69,13 @@ typedef struct s_table
 	int			must_eat;
 }	t_table;
 
-uint64_t	get_curr(uint16_t time_init);
+uint64_t	get_curr(uint64_t time_init);
 void		ph_sleep(uint64_t duration);
 
 int		ft_atoi(const char *str, unsigned long *tab_num);
 int		ft_strcmp(const char *s1, const char *s2);
-void	*self_routine(void *arg);
+void	*exit_check(void *arg);
+void	*self_control(void *arg);
 void	exit_noleak(t_table *table);
 int		ph_print(t_phi *phi, char *act);
 void	routine(t_phi *phi);

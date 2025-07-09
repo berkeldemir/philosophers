@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 15:01:31 by beldemir          #+#    #+#             */
-/*   Updated: 2025/07/09 13:42:04 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/07/09 16:28:49 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ static int	philos_init(t_table *table)
 	table->phis = (t_phi *)malloc(sizeof(t_phi) * table->philo_count);
 	if (!table->pids || !table->phis)
 		return (-1);
+	table->time_init = get_curr(0);
 	i = -1;
 	while (++i < table->philo_count)
 	{
@@ -80,10 +81,12 @@ static int	philos_init(t_table *table)
 			table->phis[i].ate = 0;
 			table->phis[i].last_meal = 0;
 			table->phis[i].table = table;
-			if (!pthread_create(&table->phis[i].self, NULL, self_routine, \
-			&table->phis[i]) || !pthread_detach(table->phis[i].self))
+			if (pthread_create(&table->phis[i].self, NULL, self_control, \
+			&table->phis[i]) || pthread_create(&table->phis[i].exitcheck, \
+			NULL, exit_check, &table->phis[i]))
 				return (-1);
-			printf("Philosopher %d is created\n", table->phis[i].id);
+			pthread_detach(table->phis[i].self);
+			pthread_detach(table->phis[i].exitcheck);
 			return (routine(&table->phis[i]), exit_noleak(table), 0);
 		}
 	}
@@ -100,7 +103,6 @@ int main(int ac, char **av)
 		return (exit_noleak(&table), 2);
 	if (philos_init(&table) != 0)
 		return (exit_noleak(&table), 3);
-	printf("girdi");
 	dining(&table);
 	return (0);
 }
