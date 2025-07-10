@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 16:45:14 by beldemir          #+#    #+#             */
-/*   Updated: 2025/07/09 17:00:37 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/07/10 20:05:22 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ void	*exit_check(void *arg)
 	phi = (t_phi *)arg;
 	pthread_detach(phi->exitcheck);
 	sem_wait(phi->table->s_quit);
+	printf("%d %d\n", phi->id, phi->ate);
 	exit_noleak(phi->table);
 	return (NULL);
 }
@@ -86,11 +87,13 @@ void	*self_control(void *arg)
 
 void	routine(t_phi *phi)
 {
+	sem_wait(phi->table->s_start);
 	if (phi->id % 2 == 1)
-		usleep(400);
+		usleep(60000);
 	while (1)
 	{
 		sem_wait(phi->table->s_forks);
+		printf("%d started\n", phi->id);
 		if (ph_print(phi, MSG_TAKENFORK))
 			break ;
 		sem_wait(phi->table->s_forks);
@@ -117,7 +120,7 @@ void	dining(t_table *table)
 	int	i;
 
 	i = -1;
-	while (++i < table->philo_count)
+	while (++i <= table->philo_count)
 		sem_post(table->s_start);
 	i = -1;
 	while (++i < table->philo_count)

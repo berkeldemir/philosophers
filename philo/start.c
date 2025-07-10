@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:24:52 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/21 18:24:28 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/07/10 19:15:57 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static void	assign_values(t_info *info, t_phi *phi, int ind)
 	phi->l_fork = &info->forks[ind];
 	phi->r_fork = &info->forks[(ind + 1) % info->philo_count];
 	if (pthread_mutex_init(&phi->meal_lock, NULL) != 0)
-		(printf("AMANİİİNNN"), exit(66));
+		exit(66);
 }
 
 static int	init_philos(t_info *info)
