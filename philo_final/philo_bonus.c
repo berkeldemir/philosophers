@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 15:01:31 by beldemir          #+#    #+#             */
-/*   Updated: 2025/07/10 18:47:03 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/07/11 01:22:39 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,10 @@ static int	philos_init(t_table *table)
 			&table->phis[i]) || pthread_create(&table->phis[i].exitcheck, \
 			NULL, exit_check, &table->phis[i]))
 				return (-1);
+			routine(&table->phis[i]);
 			pthread_detach(table->phis[i].self);
 			pthread_detach(table->phis[i].exitcheck);
-			return (routine(&table->phis[i]), exit_noleak(table), 0);
+			return (exit_noleak(table), 0);
 		}
 	}
 	return (0);

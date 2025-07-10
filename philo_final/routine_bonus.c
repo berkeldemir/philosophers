@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 16:45:14 by beldemir          #+#    #+#             */
-/*   Updated: 2025/07/10 20:05:22 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/07/11 01:23:40 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,11 +89,11 @@ void	routine(t_phi *phi)
 {
 	sem_wait(phi->table->s_start);
 	if (phi->id % 2 == 1)
-		usleep(60000);
+		usleep(100);
 	while (1)
 	{
 		sem_wait(phi->table->s_forks);
-		printf("%d started\n", phi->id);
+		//printf("%d started\n", phi->id);
 		if (ph_print(phi, MSG_TAKENFORK))
 			break ;
 		sem_wait(phi->table->s_forks);
