@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:24:52 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/13 16:40:49 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/07/15 15:49:14 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,47 +18,36 @@ void	died(t_phi *phi)
 		return ;
 	printf("%lu\t%i %s\n", elapsed_time(phi->info), phi->id, MSG_DIED);
 	pthread_mutex_unlock(&phi->info->write_lock);
+	pthread_mutex_lock(&phi->info->quit_lock);
+	phi->info->quit = TRUE;
+	pthread_mutex_unlock(&phi->info->quit_lock);
 }
 
-static int	must_eat_done(t_info *info)
-{
-	int	i;
-	int	done;
-
-	i = 0;
-	done = 0;
-	while (i < info->philo_count)
-	{
-		pthread_mutex_lock(&info->philos[i].meal_lock);
-		if (info->philos[i].eat_count >= info->must_eat)
-			done++;
-		pthread_mutex_unlock(&info->philos[i].meal_lock);
-		i++;
-	}
-	if (done == info->philo_count)
-		return (1);
-	return (0);
-}
-
-static int	anyone_starving(t_info *info)
+static int	check_meals_deads(t_info *info)
 {
 	int			i;
+	int			philo_eat_count;
+	int			total_ate;
 	uint64_t	philo_last_meal;
+	uint64_t	current_time;
 
 	i = 0;
-	philo_last_meal = 0;
+	total_ate = 0;
 	while (i < info->philo_count)
 	{
 		pthread_mutex_lock(&info->philos[i].meal_lock);
+		philo_eat_count = info->philos[i].eat_count;
 		philo_last_meal = info->philos[i].last_meal;
+		current_time = elapsed_time(info);
 		pthread_mutex_unlock(&info->philos[i].meal_lock);
-		if (elapsed_time(info) - philo_last_meal > info->time_to_die)
-		{
-			died(&info->philos[i]);
-			return (1);
-		}
+		if (current_time - philo_last_meal > info->time_to_die )
+			return (died(&info->philos[i]), 1);
+		if (info->must_eat > 0 && philo_eat_count >= info->must_eat)
+			total_ate += 1;
 		i++;
 	}
+	if (total_ate == info->philo_count)
+		return (1);
 	return (0);
 }
 
@@ -69,45 +58,14 @@ void	*waiter(void *ptr)
 	info = (t_info *)ptr;
 	while (1)
 	{
-		if (anyone_starving(info) != 0 || \
-		(info->must_eat != -1 && must_eat_done(info) != 0))
+		if (check_meals_deads(info))
 		{
 			pthread_mutex_lock(&info->quit_lock);
 			info->quit = TRUE;
 			pthread_mutex_unlock(&info->quit_lock);
 			break ;
 		}
-		usleep(100);
+		usleep(200);
 	}
 	return (NULL);
 }
-
-/*
-void	*waiter(void *arg)
-{
-	t_info	*info = (t_info *)arg;
-	int		i;
-
-	while (1)
-	{
-		if (info->must_eat != -1 && must_eat_done(info) != 0)
-			return (NULL);
-		i = -1;
-		while (++i < info->philo_count)
-		{
-			pthread_mutex_lock(&info->philos[i].meal_lock);
-			if ((elapsed_time(info) - info->philos[i].last_meal) > info->time_to_die)
-			{
-				pthread_mutex_unlock(&info->philos[i].meal_lock);
-				pthread_mutex_lock(&info->quit_lock);
-				info->quit = TRUE;
-				pthread_mutex_unlock(&info->quit_lock);
-				action(&info->philos[i], MSG_DIED);
-				return (NULL);
-			}
-			pthread_mutex_unlock(&info->philos[i].meal_lock);
-		}
-		usleep(100); // Fazla CPU kullanımı engellemek için kısa uyku
-	}
-}
-*/

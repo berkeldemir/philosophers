@@ -34,19 +34,18 @@ static int	init_table(int ac, char **av, t_table *table)
 
 static int	revive_philo(t_table *table, int i)
 {
-	t_philo	*phi;
+	t_philo	phi;
 
-	phi = (t_philo *)malloc(sizeof(t_philo));
-	if (!phi)
-		return (1);
+	sem_wait(table->sem_print);
 	printf("philo %d revived\n", i + 1);
-	phi->id = i + 1;
-	phi->ate = 0;
-	phi->last_meal = 0;
-	phi->table = table;
-	pthread_create(&phi->thread, NULL, thread_routine, phi);
-	routine(phi);
-	pthread_detach(phi->thread);
+	sem_post(table->sem_print);
+	phi.id = i + 1;
+	phi.ate = 0;
+	phi.last_meal = 0;
+	phi.table = table;
+	pthread_create(&phi.thread, NULL, thread_routine, &phi);
+	routine(&phi);
+	pthread_detach(phi.thread);
 	exit_noleak(table);
 	return (0);
 }
@@ -55,10 +54,10 @@ static int	init_philos(t_table *table)
 {
 	int	i;
 
-	i = -1;
 	table->pids = (pid_t *)malloc(sizeof(pid_t) * table->philo_count);
 	if (!table->pids)
 		return (1);
+	i = -1;
 	while (++i < table->philo_count)
 	{
 		table->pids[i] = fork();
@@ -71,6 +70,12 @@ static int	init_philos(t_table *table)
 		else if (table->pids[i] == -1)
 			return (1);
 	}
+	i = -1;
+	while (++i < table->philo_count)
+		waitpid(table->pids[i], 0, 0);
+	i = -1;
+	while (++i < table->philo_count)
+		kill(table->pids[i], SIGINT);
 	return (0);
 }
 
@@ -84,4 +89,6 @@ int	main(int ac, char **av)
 		return (2);
 	if (init_philos(&table))
 		return (3);
+	exit_noleak(&table);
+	return (0);
 }

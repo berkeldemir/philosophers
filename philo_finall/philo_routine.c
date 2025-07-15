@@ -3,7 +3,13 @@
 void	exit_noleak(t_table *table)
 {
 	(void)table;
-	exit(0);
+	if (table->pids)
+		free(table->pids);
+	if (table->sem_forks)
+		sem_close(table->sem_forks);
+	if (table->sem_print)
+		sem_close(table->sem_print);
+	return ;
 }
 
 void	routine(t_philo *phi)
@@ -14,9 +20,12 @@ void	routine(t_philo *phi)
 	while (i)
 	{
 		i = 0;
+		sem_wait(phi->table->sem_print);
 		printf("%i in action.\n", phi->id);
-		sleep(5);
+		sem_post(phi->table->sem_print);
+		usleep(200);
 	}
+	exit_noleak(phi->table);
 }
 
 void	*thread_routine(void *arg)
@@ -25,5 +34,10 @@ void	*thread_routine(void *arg)
 
 	phi = (t_philo *)arg;
 	(void)phi;
+	sem_wait(phi->table->sem_print);
+	printf("%i thread routine action.\n", phi->id);
+	sem_post(phi->table->sem_print);
+	usleep(200);
+	exit_noleak(phi->table);
 	return (NULL);
 }

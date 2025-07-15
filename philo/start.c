@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:24:52 by beldemir          #+#    #+#             */
-/*   Updated: 2025/07/10 19:15:57 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/07/15 15:28:16 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,16 +32,29 @@ static void	cleanup(t_info *info)
 	pthread_mutex_destroy(&info->quit_lock);
 }
 
-static void	assign_values(t_info *info, t_phi *phi, int ind)
+static int	assign_values(t_info *info, t_phi *phi, int ind)
 {
 	phi->id = ind + 1;
 	phi->info = info;
 	phi->eat_count = 0;
 	phi->last_meal = 0;
-	phi->l_fork = &info->forks[ind];
-	phi->r_fork = &info->forks[(ind + 1) % info->philo_count];
+	if (ind + 1 != info->philo_count)
+	{
+		phi->l_fork = &info->forks[ind + 1];
+		phi->r_fork = &info->forks[ind];
+	}
+	else
+	{
+		phi->l_fork = &info->forks[0];
+		phi->r_fork = &info->forks[ind];
+	}
 	if (pthread_mutex_init(&phi->meal_lock, NULL) != 0)
-		exit(66);
+	{
+		while (--ind >= 0)
+			pthread_mutex_destroy(&info->philos[ind].meal_lock);
+		return (1);
+	}
+	return (0);
 }
 
 static int	init_philos(t_info *info)
@@ -53,7 +66,8 @@ static int	init_philos(t_info *info)
 		return (1);
 	ind = -1;
 	while (++ind < info->philo_count)
-		assign_values(info, &info->philos[ind], ind);
+		if (assign_values(info, &info->philos[ind], ind) != 0)
+			return (free(info->philos), cleanup(info), 1);
 	if (pthread_create(&info->waiter, NULL, &waiter, info) != 0)
 		return (cleanup(info), 1);
 	ind = -1;

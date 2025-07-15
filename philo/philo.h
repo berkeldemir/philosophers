@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 11:58:05 by beldemir          #+#    #+#             */
-/*   Updated: 2025/05/21 18:10:55 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/07/15 17:33:04 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <stdint.h>
+# include <string.h>
 # include <stdlib.h>
 # include <pthread.h>
 # include <sys/time.h>
@@ -28,7 +29,7 @@
 # define MSG_EATING "is eating"
 # define MSG_DIED "died"
 
-struct	s_info;
+//typedef struct s_info	t_info;
 
 typedef enum e_bool
 {
