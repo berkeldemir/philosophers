@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:24:52 by beldemir          #+#    #+#             */
-/*   Updated: 2025/07/15 15:49:14 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/08/01 15:07:53 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,12 @@ static int	check_meals_deads(t_info *info)
 		philo_last_meal = info->philos[i].last_meal;
 		current_time = elapsed_time(info);
 		pthread_mutex_unlock(&info->philos[i].meal_lock);
-		if (current_time - philo_last_meal > info->time_to_die )
+		if (current_time - philo_last_meal > info->time_to_die)
 			return (died(&info->philos[i]), 1);
 		if (info->must_eat > 0 && philo_eat_count >= info->must_eat)
 			total_ate += 1;
 		i++;
+		usleep(200);
 	}
 	if (total_ate == info->philo_count)
 		return (1);

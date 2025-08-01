@@ -6,7 +6,7 @@
 /*   By: beldemir <beldemir@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:24:52 by beldemir          #+#    #+#             */
-/*   Updated: 2025/07/15 15:28:16 by beldemir         ###   ########.fr       */
+/*   Updated: 2025/08/01 14:52:33 by beldemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,18 +67,20 @@ static int	init_philos(t_info *info)
 	ind = -1;
 	while (++ind < info->philo_count)
 		if (assign_values(info, &info->philos[ind], ind) != 0)
-			return (free(info->philos), cleanup(info), 1);
+			return (1);
 	if (pthread_create(&info->waiter, NULL, &waiter, info) != 0)
-		return (cleanup(info), 1);
+		return (1);
 	ind = -1;
 	while (++ind < info->philo_count)
 		if (pthread_create(&info->philos[ind].thr, NULL, routine, \
 		&info->philos[ind]) != 0)
 			return (1);
-	pthread_join(info->waiter, NULL);
 	ind = -1;
 	while (++ind < info->philo_count)
-		pthread_join(info->philos[ind].thr, NULL);
+		if (pthread_detach(info->philos[ind].thr) != 0)
+			return (1);
+	if (pthread_join(info->waiter, NULL) != 0)
+		return (1);
 	return (0);
 }
 
